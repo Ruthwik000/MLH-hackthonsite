@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection
+    match /users/{userId} {
+      // Users can read their own document
+      allow read: if request.auth != null && request.auth.uid == userId;
+      
+      // Allow creation during signup - user can create their own document
+      allow create: if request.auth != null && request.auth.uid == userId;
+      
+      // Allow update of own document (for role updates during login)
+      allow update: if request.auth != null && request.auth.uid == userId;
+      
+      // Admins can read all users (only if their user doc exists and has admin role)
+      allow read: if request.auth != null && 
+                     exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                     get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Applications collection
+    match /applications/{applicationId} {
+      // Students can read only their own applications
+      allow read: if request.auth != null && 
+                     resource.data.userId == request.auth.uid;
+      
+      // Students can create only one application (check by userId in query)
+      allow create: if request.auth != null && 
+                       request.resource.data.userId == request.auth.uid;
+      
+      // Admins can read and update all applications (only if their user doc exists and has admin role)
+      allow read, update: if request.auth != null && 
+                            exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+                            get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+  }
+}
