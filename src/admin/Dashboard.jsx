@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase/config';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
@@ -23,7 +24,6 @@ const Dashboard = () => {
       const querySnapshot = await getDocs(collection(db, 'applications'));
       const applications = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-      // Calculate stats
       const newStats = {
         total: applications.length,
         pending: applications.filter(app => app.status === 'pending').length,
@@ -33,7 +33,6 @@ const Dashboard = () => {
       };
       setStats(newStats);
 
-      // Calculate college distribution
       const collegeCount = {};
       applications.forEach(app => {
         collegeCount[app.college] = (collegeCount[app.college] || 0) + 1;
@@ -54,62 +53,89 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 py-8 px-4">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-8">
-          Admin <span className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">Dashboard</span>
-        </h1>
+    <div className="min-h-screen bg-gray-950">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-semibold text-white tracking-tight">Dashboard</h1>
+          <p className="mt-1 text-sm text-gray-400">Overview of all hackathon applications</p>
+        </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-12">
-          <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-            <div className="text-gray-400 text-sm mb-2">Total Applications</div>
-            <div className="text-3xl font-bold text-white">{stats.total}</div>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
+          <div className="bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-800">
+            <div className="text-xs font-medium text-gray-400 uppercase tracking-wide mb-2">Total</div>
+            <div className="text-3xl font-semibold text-white">{stats.total}</div>
           </div>
-          <div className="bg-gray-800 rounded-lg p-6 border border-yellow-600">
-            <div className="text-gray-400 text-sm mb-2">Pending</div>
-            <div className="text-3xl font-bold text-yellow-500">{stats.pending}</div>
+          <div className="bg-gray-900 rounded-xl p-6 shadow-sm border border-yellow-900/50">
+            <div className="text-xs font-medium text-yellow-400 uppercase tracking-wide mb-2">Pending</div>
+            <div className="text-3xl font-semibold text-yellow-400">{stats.pending}</div>
           </div>
-          <div className="bg-gray-800 rounded-lg p-6 border border-green-600">
-            <div className="text-gray-400 text-sm mb-2">Accepted</div>
-            <div className="text-3xl font-bold text-green-500">{stats.accepted}</div>
+          <div className="bg-gray-900 rounded-xl p-6 shadow-sm border border-green-900/50">
+            <div className="text-xs font-medium text-green-400 uppercase tracking-wide mb-2">Accepted</div>
+            <div className="text-3xl font-semibold text-green-400">{stats.accepted}</div>
           </div>
-          <div className="bg-gray-800 rounded-lg p-6 border border-red-600">
-            <div className="text-gray-400 text-sm mb-2">Rejected</div>
-            <div className="text-3xl font-bold text-red-500">{stats.rejected}</div>
+          <div className="bg-gray-900 rounded-xl p-6 shadow-sm border border-red-900/50">
+            <div className="text-xs font-medium text-red-400 uppercase tracking-wide mb-2">Rejected</div>
+            <div className="text-3xl font-semibold text-red-400">{stats.rejected}</div>
           </div>
-          <div className="bg-gray-800 rounded-lg p-6 border border-blue-600">
-            <div className="text-gray-400 text-sm mb-2">Waitlisted</div>
-            <div className="text-3xl font-bold text-blue-500">{stats.waitlisted}</div>
+          <div className="bg-gray-900 rounded-xl p-6 shadow-sm border border-blue-900/50">
+            <div className="text-xs font-medium text-blue-400 uppercase tracking-wide mb-2">Waitlisted</div>
+            <div className="text-3xl font-semibold text-blue-400">{stats.waitlisted}</div>
           </div>
         </div>
 
+        {/* Quick Actions */}
+        <div className="mb-8">
+          <Link
+            to="/admin/applications"
+            className="inline-flex items-center px-6 py-3 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors"
+          >
+            View All Applications
+            <svg className="ml-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </div>
+
         {/* College Distribution Chart */}
-        <div className="bg-gray-800 rounded-lg p-8 border border-gray-700">
-          <h2 className="text-2xl font-bold text-white mb-6">Top 10 Colleges by Applications</h2>
+        <div className="bg-gray-900 rounded-xl p-8 shadow-sm border border-gray-800">
+          <h2 className="text-lg font-semibold text-white mb-6">Top Colleges</h2>
           {collegeData.length > 0 ? (
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={collegeData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                <XAxis dataKey="college" stroke="#9CA3AF" angle={-45} textAnchor="end" height={120} />
-                <YAxis stroke="#9CA3AF" />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151' }}
-                  labelStyle={{ color: '#F3F4F6' }}
+                <XAxis 
+                  dataKey="college" 
+                  stroke="#9ca3af" 
+                  angle={-45} 
+                  textAnchor="end" 
+                  height={150}
+                  interval={0}
+                  style={{ fontSize: '12px' }} 
                 />
-                <Legend />
-                <Bar dataKey="count" fill="#f97316" name="Applications" />
+                <YAxis stroke="#9ca3af" style={{ fontSize: '12px' }} />
+                <Tooltip
+                  contentStyle={{ 
+                    backgroundColor: '#1f2937', 
+                    border: '1px solid #374151', 
+                    borderRadius: '8px',
+                    color: '#f3f4f6'
+                  }}
+                  labelStyle={{ color: '#f3f4f6', fontWeight: '500' }}
+                />
+                <Bar dataKey="count" fill="#f97316" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
-            <div className="text-center text-gray-400 py-12">No data available</div>
+            <div className="text-center text-gray-500 py-12">No data available</div>
           )}
         </div>
       </div>

@@ -79,56 +79,63 @@ const Applications = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending': return 'text-yellow-500 bg-yellow-500/10 border-yellow-500';
-      case 'accepted': return 'text-green-500 bg-green-500/10 border-green-500';
-      case 'rejected': return 'text-red-500 bg-red-500/10 border-red-500';
-      case 'waitlisted': return 'text-blue-500 bg-blue-500/10 border-blue-500';
-      default: return 'text-gray-500 bg-gray-500/10 border-gray-500';
+      case 'pending': return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30';
+      case 'accepted': return 'bg-green-500/10 text-green-400 border-green-500/30';
+      case 'rejected': return 'bg-red-500/10 text-red-400 border-red-500/30';
+      case 'waitlisted': return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
+      default: return 'bg-gray-500/10 text-gray-400 border-gray-500/30';
     }
   };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 py-8 px-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gray-950">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-white">
-            All <span className="bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent">Applications</span>
-          </h1>
+          <div>
+            <h1 className="text-3xl font-semibold text-white tracking-tight">Applications</h1>
+            <p className="mt-1 text-sm text-gray-400">
+              {filteredApps.length} of {applications.length} applications
+            </p>
+          </div>
           <button
             onClick={handleExport}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition"
+            className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
           >
+            <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
             Export CSV
           </button>
         </div>
 
         {/* Filters */}
-        <div className="bg-gray-800 rounded-lg p-6 mb-6 border border-gray-700">
+        <div className="bg-gray-900 rounded-xl p-6 mb-6 shadow-sm border border-gray-800">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-gray-300 mb-2">Search</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Search</label>
               <input
                 type="text"
                 placeholder="Search by name, email, or college..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block text-gray-300 mb-2">Filter by Status</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">Status</label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-900 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-primary"
+                className="w-full px-4 py-2 bg-gray-950 border border-gray-800 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending</option>
@@ -140,48 +147,49 @@ const Applications = () => {
           </div>
         </div>
 
-        {/* Results Count */}
-        <div className="text-gray-400 mb-4">
-          Showing {filteredApps.length} of {applications.length} applications
-        </div>
-
         {/* Applications Table */}
         {filteredApps.length === 0 ? (
-          <div className="bg-gray-800 rounded-lg p-12 border border-gray-700 text-center">
-            <p className="text-gray-400 text-lg">No applications found</p>
+          <div className="bg-gray-900 rounded-xl p-12 shadow-sm border border-gray-800 text-center">
+            <svg className="mx-auto h-12 w-12 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <p className="mt-4 text-gray-500">No applications found</p>
           </div>
         ) : (
-          <div className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+          <div className="bg-gray-900 rounded-xl shadow-sm border border-gray-800 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-900">
+                <thead className="bg-gray-950 border-b border-gray-800">
                   <tr>
-                    <th className="px-6 py-4 text-left text-gray-300 font-semibold">Name</th>
-                    <th className="px-6 py-4 text-left text-gray-300 font-semibold">College</th>
-                    <th className="px-6 py-4 text-left text-gray-300 font-semibold">Team</th>
-                    <th className="px-6 py-4 text-left text-gray-300 font-semibold">Year</th>
-                    <th className="px-6 py-4 text-left text-gray-300 font-semibold">Status</th>
-                    <th className="px-6 py-4 text-left text-gray-300 font-semibold">Action</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">College</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Team</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Year</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-700">
+                <tbody className="divide-y divide-gray-800">
                   {filteredApps.map((app) => (
-                    <tr key={app.id} className="hover:bg-gray-700/50 transition">
-                      <td className="px-6 py-4 text-white">{app.fullName}</td>
-                      <td className="px-6 py-4 text-gray-300">{app.college}</td>
-                      <td className="px-6 py-4 text-gray-300">{app.teamName}</td>
-                      <td className="px-6 py-4 text-gray-300">{app.graduationYear}</td>
-                      <td className="px-6 py-4">
-                        <span className={`px-3 py-1 rounded-full text-sm border ${getStatusColor(app.status)}`}>
+                    <tr key={app.id} className="hover:bg-gray-800/50 transition-colors">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-white">{app.fullName}</div>
+                        <div className="text-sm text-gray-400">{app.email}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{app.college}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{app.teamName}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-300">{app.graduationYear}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(app.status)}`}>
                           {app.status}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <Link
                           to={`/admin/applications/${app.id}`}
-                          className="text-primary hover:text-primary/80 font-semibold"
+                          className="text-orange-400 hover:text-orange-300 font-medium"
                         >
-                          View Details
+                          View Details →
                         </Link>
                       </td>
                     </tr>

@@ -54,8 +54,8 @@ const ApplicationDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
       </div>
     );
   }
@@ -66,168 +66,181 @@ const ApplicationDetail = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'pending': return 'text-yellow-500 bg-yellow-500/10 border-yellow-500';
-      case 'accepted': return 'text-green-500 bg-green-500/10 border-green-500';
-      case 'rejected': return 'text-red-500 bg-red-500/10 border-red-500';
-      case 'waitlisted': return 'text-blue-500 bg-blue-500/10 border-blue-500';
-      default: return 'text-gray-500 bg-gray-500/10 border-gray-500';
+      case 'pending': return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/30';
+      case 'accepted': return 'bg-green-500/10 text-green-400 border-green-500/30';
+      case 'rejected': return 'bg-red-500/10 text-red-400 border-red-500/30';
+      case 'waitlisted': return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
+      default: return 'bg-gray-500/10 text-gray-400 border-gray-500/30';
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-950">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Back Button */}
         <button
           onClick={() => navigate('/admin/applications')}
-          className="text-gray-400 hover:text-white mb-6 flex items-center"
+          className="inline-flex items-center text-sm text-gray-400 hover:text-white mb-6"
         >
-          <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
           Back to Applications
         </button>
 
-        <div className="bg-gray-800 rounded-lg p-8 border border-gray-700">
-          <div className="flex justify-between items-start mb-6">
+        {/* Header */}
+        <div className="bg-gray-900 rounded-xl p-8 shadow-sm border border-gray-800 mb-6">
+          <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">{application.fullName}</h1>
-              <span className={`inline-block px-4 py-2 rounded-full text-sm border ${getStatusColor(application.status)}`}>
-                {application.status.toUpperCase()}
-              </span>
+              <h1 className="text-3xl font-semibold text-white tracking-tight">{application.fullName}</h1>
+              <p className="mt-1 text-sm text-gray-400">{application.email}</p>
             </div>
+            <span className={`inline-flex px-3 py-1 text-sm font-medium rounded-full border ${getStatusColor(application.status)}`}>
+              {application.status.toUpperCase()}
+            </span>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap gap-3 mb-8 pb-8 border-b border-gray-700">
+          <div className="flex flex-wrap gap-3 mt-6 pt-6 border-t border-gray-800">
             <button
               onClick={() => updateStatus('accepted')}
               disabled={updating || application.status === 'accepted'}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
+              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
               Accept
             </button>
             <button
               onClick={() => updateStatus('rejected')}
               disabled={updating || application.status === 'rejected'}
-              className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
+              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
               Reject
             </button>
             <button
               onClick={() => updateStatus('waitlisted')}
               disabled={updating || application.status === 'waitlisted'}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
+              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
               Waitlist
             </button>
             <button
               onClick={() => updateStatus('pending')}
               disabled={updating || application.status === 'pending'}
-              className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-2 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Reset to Pending
+              Reset
             </button>
           </div>
+        </div>
 
-          {/* Application Details */}
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Application Details */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Personal Information */}
+          <div className="bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-800">
+            <h2 className="text-lg font-semibold text-white mb-4">Personal Information</h2>
+            <dl className="space-y-4">
               <div>
-                <h3 className="text-gray-400 text-sm mb-1">Email</h3>
-                <p className="text-white">{application.email}</p>
+                <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Phone</dt>
+                <dd className="mt-1 text-sm text-gray-200">{application.phone}</dd>
               </div>
               <div>
-                <h3 className="text-gray-400 text-sm mb-1">Phone</h3>
-                <p className="text-white">{application.phone}</p>
+                <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">College</dt>
+                <dd className="mt-1 text-sm text-gray-200">{application.college}</dd>
               </div>
-            </div>
+              <div>
+                <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Degree</dt>
+                <dd className="mt-1 text-sm text-gray-200">{application.degree}</dd>
+              </div>
+              <div>
+                <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Graduation Year</dt>
+                <dd className="mt-1 text-sm text-gray-200">{application.graduationYear}</dd>
+              </div>
+              <div>
+                <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Applied On</dt>
+                <dd className="mt-1 text-sm text-gray-200">{new Date(application.createdAt).toLocaleString()}</dd>
+              </div>
+            </dl>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Team Information */}
+          <div className="bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-800">
+            <h2 className="text-lg font-semibold text-white mb-4">Team Information</h2>
+            <dl className="space-y-4">
               <div>
-                <h3 className="text-gray-400 text-sm mb-1">College</h3>
-                <p className="text-white">{application.college}</p>
+                <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Team Name</dt>
+                <dd className="mt-1 text-sm text-gray-200">{application.teamName}</dd>
               </div>
               <div>
-                <h3 className="text-gray-400 text-sm mb-1">Degree</h3>
-                <p className="text-white">{application.degree}</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-gray-400 text-sm mb-1">Graduation Year</h3>
-                <p className="text-white">{application.graduationYear}</p>
+                <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">Team Size</dt>
+                <dd className="mt-1 text-sm text-gray-200">{application.teamSize} member(s)</dd>
               </div>
               <div>
-                <h3 className="text-gray-400 text-sm mb-1">Applied On</h3>
-                <p className="text-white">{new Date(application.createdAt).toLocaleString()}</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-gray-400 text-sm mb-1">Team Name</h3>
-                <p className="text-white">{application.teamName}</p>
-              </div>
-              <div>
-                <h3 className="text-gray-400 text-sm mb-1">Team Size</h3>
-                <p className="text-white">{application.teamSize} member(s)</p>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-gray-400 text-sm mb-2">Skills</h3>
-              <div className="flex flex-wrap gap-2">
-                {application.skills.map((skill, index) => (
-                  <span
-                    key={index}
-                    className="px-3 py-1 bg-primary/20 text-primary rounded-full text-sm border border-primary/30"
+                <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">GitHub</dt>
+                <dd className="mt-1">
+                  <a
+                    href={application.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-orange-400 hover:text-orange-300"
                   >
-                    {skill}
-                  </span>
-                ))}
+                    {application.github}
+                  </a>
+                </dd>
               </div>
-            </div>
-
-            <div>
-              <h3 className="text-gray-400 text-sm mb-1">GitHub Profile</h3>
-              <a
-                href={application.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                {application.github}
-              </a>
-            </div>
-
-            {application.linkedIn && (
+              {application.linkedIn && (
+                <div>
+                  <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">LinkedIn</dt>
+                  <dd className="mt-1">
+                    <a
+                      href={application.linkedIn}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-orange-400 hover:text-orange-300"
+                    >
+                      {application.linkedIn}
+                    </a>
+                  </dd>
+                </div>
+              )}
               <div>
-                <h3 className="text-gray-400 text-sm mb-1">LinkedIn Profile</h3>
-                <a
-                  href={application.linkedIn}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline"
-                >
-                  {application.linkedIn}
-                </a>
+                <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">MLH Code of Conduct</dt>
+                <dd className="mt-1 text-sm text-gray-200">
+                  {application.mlhAccepted ? '✓ Accepted' : '✗ Not Accepted'}
+                </dd>
               </div>
-            )}
+            </dl>
+          </div>
 
-            <div>
-              <h3 className="text-gray-400 text-sm mb-2">Why do they want to participate?</h3>
-              <p className="text-white bg-gray-900 p-4 rounded-lg border border-gray-700">
-                {application.whyParticipate}
-              </p>
+          {/* Skills */}
+          <div className="bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-800">
+            <h2 className="text-lg font-semibold text-white mb-4">Skills</h2>
+            <div className="flex flex-wrap gap-2">
+              {application.skills.map((skill, index) => (
+                <span
+                  key={index}
+                  className="inline-flex px-3 py-1 bg-orange-500/10 text-orange-400 text-sm font-medium rounded-full border border-orange-500/30"
+                >
+                  {skill}
+                </span>
+              ))}
             </div>
+          </div>
 
-            <div>
-              <h3 className="text-gray-400 text-sm mb-1">MLH Code of Conduct</h3>
-              <p className="text-white">
-                {application.mlhAccepted ? '✓ Accepted' : '✗ Not Accepted'}
-              </p>
-            </div>
+          {/* Motivation */}
+          <div className="bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-800">
+            <h2 className="text-lg font-semibold text-white mb-4">Why Participate?</h2>
+            <p className="text-sm text-gray-300 leading-relaxed">
+              {application.whyParticipate}
+            </p>
           </div>
         </div>
       </div>
